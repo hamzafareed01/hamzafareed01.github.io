@@ -1,5 +1,7 @@
-import { motion, useInView, AnimatePresence } from "motion/react";
+    import { motion, useInView, AnimatePresence } from "motion/react";
 import { useRef, useState, useEffect } from "react";
+import ruLogo from "@/assets/Roosevelt University logo.jpeg";
+
 
 export function Education() {
   const ref = useRef(null);
@@ -117,7 +119,12 @@ export function Education() {
           <div className="relative z-10">
             <div className="flex items-start gap-6 mb-6">
               <img
-                src="https://images.unsplash.com/photo-1695556575317-9d49e3dccf75?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1bml2ZXJzaXR5JTIwc2VhbCUyMGxvZ28lMjBlbWJsZW18ZW58MXx8fHwxNjcwNzA1NDQzOHww&ixlib=rb-4.1.0&q=80&w=400"
+                <img
+  src={ruLogo}
+  alt="Roosevelt University Logo"
+  className="w-16 h-16 object-contain"
+  loading="lazy"
+/>
                 alt="Roosevelt University Logo"
                 className="w-16 h-16 object-contain"
               />
