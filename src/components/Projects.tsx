@@ -94,26 +94,57 @@ export function Projects() {
       color: "from-emerald-500 to-teal-500",
       demoLink: "https://github.com/hamzafareed01/Scrolling-Game-Python"
     },
-    {
-      title: "Hospital Price Transparency \"Truth Finder\"",
-      outcome: "Prototype that validates hospital price transparency files and makes prices easier to compare",
-      description: "Data validator and indexer for CMS-mandated hospital pricing files with comparison UI",
-      problem: "Hospitals publish machine-readable pricing and shoppable services; it's messy and inconsistent (CMS requirement)",
-      approach: "Build a validator and indexer for machine-readable files, then a UI to estimate/compare common services",
-      features: [],
-      tech: ["React", "API", "Postgres", "GitHub Actions", "Azure"],
-      learned: "",
-      nextSteps: [
-        "Expand coverage to more hospitals",
-        "Add compliance checks for CMS requirements",
-        "Enhance compare UX with visual improvements"
-      ],
-      color: "from-orange-500 to-red-500",
-      locked: true,
-      status: "In Progress",
-      currentStatus: "Schema validation prototype, ingestion pipeline, and UI wireframe completed",
-      dataSources: "CMS Hospital Price Transparency"
-    },
+  {
+  title: "PulseRisk — Real-Time Payment Risk Scoring + Alerting + Recon & Explain",
+  outcome:
+    "Azure-native microservices that score payment risk in real time, raise alerts, manage cases, and explain mismatches via nightly reconciliation",
+  description:
+    "End-to-end payments risk platform: ingest events → compute risk scores → alert + case management → nightly recon → RCA ‘Recon & Explain’ explorer",
+  problem:
+    "Risk teams need low-latency detection, reliable alert/case workflows, and explainability when data is messy (duplicates, retries, missing scores/alerts).",
+  approach:
+    "Built as Spring Boot services with event-driven messaging, Azure SQL-backed feature/score queries, observability for trace-to-log correlation, and a recon batch that generates explanation codes powering an RCA API.",
+  features: [
+    "Ingest API with schema validation + idempotency key (dedupe) and event publishing",
+    "Risk scoring service with rule versioning + feature queries persisted to risk_scores",
+    "Alerting service with retries + DLQ patterns and alert lifecycle APIs",
+    "Case workflow (Open → Investigating → Resolved/False Positive) with comments + audit trail",
+    "Nightly Spring Batch reconciliation that finds mismatches and produces explanation codes",
+    "RCA endpoint that explains ‘why’ using recon findings + event history + correlation IDs",
+    "SQL-heavy analytics endpoints (CTEs + window functions) for velocity, SLA, and trend insights",
+    "Incident simulations + RCAs (slow query, retry storm, duplicate ingest) with regression prevention tests"
+  ],
+  tech: [
+    "Java",
+    "Spring Boot",
+    "Spring Batch",
+    "Azure SQL",
+    "AKS",
+    "ACR",
+    "Service Bus / Event Hubs",
+    "Key Vault + Managed Identity",
+    "OpenTelemetry / Application Insights",
+    "Testcontainers",
+    "k6 / JMeter",
+    "Terraform/Bicep",
+    "Helm",
+    "GitHub Actions"
+  ],
+  learned:
+    "How to ship production-style services end-to-end: clean boundaries, OpenAPI contracts, test pyramids (unit/integration/contract), SQL tuning with query plans + indexes, and incident-style ownership through RCAs and runbooks.",
+  nextSteps: [
+    "Add a lightweight ‘Rules & Thresholds’ admin UI for risk policy changes",
+    "Publish sample dashboards for alert volume, case SLA, and recon drift over time",
+    "Harden the pipeline with canary deploys and chaos testing for retry/DLQ scenarios"
+  ],
+  color: "from-fuchsia-500 to-indigo-500",
+  status: "In Progress",
+  currentStatus:
+    "Services scaffolded + schema + recon design; implementing Recon & Explain endpoints and SQL performance docs",
+  dataSources: "Synthetic payment events + generated recon datasets",
+  hideDemo: true
+},
+
     {
       title: "FinTech \"Complaint Early-Warning Radar\" (CFPB)",
       outcome: "Ingests CFPB complaint data to detect trends and generate risk alerts",
