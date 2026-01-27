@@ -1,4 +1,4 @@
-    import { motion, useInView, AnimatePresence } from "motion/react";
+import { motion, useInView, AnimatePresence } from "motion/react";
 import { useRef, useState, useEffect } from "react";
 import ruLogo from "@/assets/roosevelt-university-logo.jpg";
 
@@ -125,9 +125,6 @@ export function Education() {
   loading="lazy"
 />
 
-                alt="Roosevelt University Logo"
-                className="w-16 h-16 object-contain"
-              />
               <div className="flex-1">
                 <h3 className="text-3xl text-white mb-2">Roosevelt University</h3>
                 <p className="text-[#0078d4] mb-1">B.S. Computer Science (Software Engineering)</p>
@@ -200,7 +197,7 @@ export function Education() {
                       <button
                         type="button"
                         onClick={() => setSelectedCourseIndex(null)}
-                        className="shrink-0 px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:border-[#0078d4]/50 transition-all"
+                        className="shrink-0 px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white hover;border-[#0078d4]/50 transition-all"
                         aria-label="Close coursework details"
                       >
                         Close
