@@ -94,25 +94,19 @@ export function Projects() {
       color: "from-emerald-500 to-teal-500",
       demoLink: "https://github.com/hamzafareed01/Scrolling-Game-Python"
     },
-  {
+ {
   title: "PulseRisk — Payments Risk Platform",
-  outcome:
-    "Azure-native microservices that score payment risk in real time, raise alerts, manage cases, and explain mismatches via nightly reconciliation",
-  description:
-    "End-to-end payments risk platform: ingest events → compute risk scores → alert + case management → nightly recon → RCA ‘Recon & Explain’ explorer",
-  problem:
-    "Risk teams need low-latency detection, reliable alert/case workflows, and explainability when data is messy (duplicates, retries, missing scores/alerts).",
-  approach:
-    "Built as Spring Boot services with event-driven messaging, Azure SQL-backed feature/score queries, observability for trace-to-log correlation, and a recon batch that generates explanation codes powering an RCA API.",
+  outcome: "Azure-native system that scores real-time payment risk, raises alerts, and explains mismatches via nightly reconciliation",
+  description: "Spring Boot microservices + Recon & Explain module to showcase SDLC, SQL depth, and production-style ownership",
+  problem: "Payment systems need low-latency risk detection, reliable alert/case workflows, and explainability when data is messy (duplicates, retries, missing records).",
+  approach: "Ingest payment events → compute risk score → create alerts → manage cases → nightly recon generates findings + explanation codes → RCA endpoints explain ‘why’, backed by tuned Azure SQL queries and full incident/runbook docs.",
   features: [
-    "Ingest API with schema validation + idempotency key (dedupe) and event publishing",
-    "Risk scoring service with rule versioning + feature queries persisted to risk_scores",
-    "Alerting service with retries + DLQ patterns and alert lifecycle APIs",
-    "Case workflow (Open → Investigating → Resolved/False Positive) with comments + audit trail",
-    "Nightly Spring Batch reconciliation that finds mismatches and produces explanation codes",
-    "RCA endpoint that explains ‘why’ using recon findings + event history + correlation IDs",
-    "SQL-heavy analytics endpoints (CTEs + window functions) for velocity, SLA, and trend insights",
-    "Incident simulations + RCAs (slow query, retry storm, duplicate ingest) with regression prevention tests"
+    "Idempotent ingest (dedupe) + schema validation",
+    "Risk scoring with rule versioning + feature queries",
+    "Alerting with retries + DLQ patterns",
+    "Case workflow (Open → Investigating → Resolved/False Positive) + comments",
+    "Nightly recon checks + explanation codes",
+    "RCA endpoint: explain an alert/payment with correlated evidence"
   ],
   tech: [
     "Java",
@@ -121,29 +115,30 @@ export function Projects() {
     "Azure SQL",
     "AKS",
     "ACR",
-    "Service Bus / Event Hubs",
-    "Key Vault + Managed Identity",
-    "OpenTelemetry / Application Insights",
-    "Testcontainers",
-    "k6 / JMeter",
-    "Terraform/Bicep",
+    "Service Bus",
+    "Key Vault",
+    "Managed ID",
+    "OpenTelemetry",
+    "App Insights",
     "Helm",
-    "GitHub Actions"
+    "Terraform",
+    "GitHub Actions",
+    "Testcontainers",
+    "k6"
   ],
-  learned:
-    "How to ship production-style services end-to-end: clean boundaries, OpenAPI contracts, test pyramids (unit/integration/contract), SQL tuning with query plans + indexes, and incident-style ownership through RCAs and runbooks.",
+  learned: "Designed a production-style, event-driven system end-to-end: clean service boundaries, OpenAPI contracts, SQL tuning (CTEs/window functions/indexes/query plans), and incident ownership with RCAs + regression prevention.",
   nextSteps: [
-    "Add a lightweight ‘Rules & Thresholds’ admin UI for risk policy changes",
-    "Publish sample dashboards for alert volume, case SLA, and recon drift over time",
-    "Harden the pipeline with canary deploys and chaos testing for retry/DLQ scenarios"
+    "Publish SQL performance pack (plans + before/after timings)",
+    "Document 3 incident RCAs (duplicate events, retry storm, slow query)",
+    "Deploy charts to AKS and add dashboards for alert volume + case SLA"
   ],
-  color: "from-fuchsia-500 to-indigo-500",
+  color: "from-orange-500 to-red-500",
+  locked: true,
   status: "In Progress",
-  currentStatus:
-    "Services scaffolded + schema + recon design; implementing Recon & Explain endpoints and SQL performance docs",
-  dataSources: "Synthetic payment events + generated recon datasets",
-  hideDemo: true
+  currentStatus: "Microservices scaffolded; implementing Recon & Explain endpoints + reconciliation rules + SQL tuning docs",
+  dataSources: "Synthetic payment events + generated recon datasets"
 },
+
 
     {
       title: "FinTech \"Complaint Early-Warning Radar\" (CFPB)",
