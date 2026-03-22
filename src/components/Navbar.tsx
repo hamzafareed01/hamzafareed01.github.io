@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import Logo from "./Logo";
 
 interface NavbarProps {
   activeSection: string;
@@ -14,22 +15,22 @@ export function Navbar({ activeSection }: NavbarProps) {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'experience', label: 'Experience' },
-    { id: 'skills', label: 'Skills' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'contact', label: 'Contact' }
+    { id: "home", label: "Home" },
+    { id: "experience", label: "Experience" },
+    { id: "skills", label: "Skills" },
+    { id: "projects", label: "Projects" },
+    { id: "contact", label: "Contact" },
   ];
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
       setIsMobileMenuOpen(false);
     }
   };
@@ -40,19 +41,20 @@ export function Navbar({ activeSection }: NavbarProps) {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          isScrolled ? 'glass shadow-lg' : 'bg-transparent backdrop-blur-sm'
+          isScrolled ? "glass shadow-lg" : "bg-transparent backdrop-blur-sm"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
+            {/* Logo only */}
             <motion.button
-              onClick={() => scrollToSection('home')}
+              onClick={() => scrollToSection("home")}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="text-2xl font-bold bg-gradient-to-r from-[#0078d4] to-cyan-400 bg-clip-text text-transparent"
+              className="flex items-center justify-center"
+              aria-label="Go to home"
             >
-              HS
+              <Logo reduceMotion className="w-12 h-12 md:w-14 md:h-14" />
             </motion.button>
 
             {/* Desktop Navigation */}
@@ -63,16 +65,24 @@ export function Navbar({ activeSection }: NavbarProps) {
                   onClick={() => scrollToSection(item.id)}
                   className="relative group"
                 >
-                  <span className={`transition-colors ${
-                    activeSection === item.id ? 'text-[#0078d4]' : 'text-gray-400 hover:text-white'
-                  }`}>
+                  <span
+                    className={`transition-colors ${
+                      activeSection === item.id
+                        ? "text-[#0078d4]"
+                        : "text-gray-400 hover:text-white"
+                    }`}
+                  >
                     {item.label}
                   </span>
                   {activeSection === item.id && (
                     <motion.div
                       layoutId="activeSection"
                       className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#0078d4]"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
                     />
                   )}
                 </button>
@@ -83,8 +93,13 @@ export function Navbar({ activeSection }: NavbarProps) {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden text-white p-2"
+              aria-label="Toggle mobile menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -105,8 +120,8 @@ export function Navbar({ activeSection }: NavbarProps) {
                 onClick={() => scrollToSection(item.id)}
                 className={`px-6 py-4 text-left transition-colors ${
                   activeSection === item.id
-                    ? 'bg-[#0078d4]/20 text-[#0078d4]'
-                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                    ? "bg-[#0078d4]/20 text-[#0078d4]"
+                    : "text-gray-400 hover:bg-white/5 hover:text-white"
                 }`}
               >
                 {item.label}
@@ -124,12 +139,18 @@ export function Navbar({ activeSection }: NavbarProps) {
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
-                activeSection === item.id ? 'text-[#0078d4]' : 'text-gray-400'
+                activeSection === item.id
+                  ? "text-[#0078d4]"
+                  : "text-gray-400"
               }`}
             >
-              <div className={`w-1.5 h-1.5 rounded-full ${
-                activeSection === item.id ? 'bg-[#0078d4]' : 'bg-transparent'
-              }`} />
+              <div
+                className={`w-1.5 h-1.5 rounded-full ${
+                  activeSection === item.id
+                    ? "bg-[#0078d4]"
+                    : "bg-transparent"
+                }`}
+              />
               <span className="text-xs">{item.label}</span>
             </button>
           ))}
