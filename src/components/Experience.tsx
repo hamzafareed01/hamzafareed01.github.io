@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { useInView } from "motion/react";
 import { useRef, useState } from "react";
 import {
-  Briefcase,
   ChevronDown,
   Zap,
   TrendingUp,
@@ -17,6 +16,8 @@ interface ExperienceItem {
   period: string;
   bullets: string[];
   tags: string[];
+  logo: string;
+  logoAlt: string;
 }
 
 export function Experience() {
@@ -31,25 +32,29 @@ export function Experience() {
       location: "Remote",
       period: "Oct 2025 – Present",
       bullets: [
-        "Engineered and shipped production-ready full-stack features from Figma designs and product requirements, collaborating across design, development, testing, and release workflows.",
-        "Boosted frontend performance by 28% using code splitting, asset optimization, and performance-focused engineering practices to improve page speed and user experience.",
-        "Strengthened release processes by implementing CI/CD pipelines with GitHub Actions, including linting, unit testing, and preview deployment automation.",
-        "Integrated RESTful APIs for authentication and payment workflows while improving error handling, debugging, and production reliability."
+        "Delivered production-ready full-stack features from Figma requirements, collaborating across implementation, QA, and release readiness in an Agile workflow.",
+        "Improved frontend performance by 28% through code splitting, asset optimization, and page-load tuning, strengthening user experience and delivery quality.",
+        "Built and maintained CI/CD pipelines in GitHub Actions for linting, unit tests, and preview deployments, improving release consistency and reducing manual deployment steps.",
+        "Integrated REST APIs for authentication and payment workflows, while improving API error handling, debugging, and production reliability."
       ],
-      tags: ["React", "REST APIs", "CI/CD", "Performance", "GitHub Actions"]
+      tags: ["React", "TypeScript", "REST APIs", "GitHub Actions", "CI/CD", "Performance", "Azure", "Agile"],
+      logo: "/company-logos/thecoded-inc-logo.jpg",
+      logoAlt: "TheCoded Inc logo"
     },
     {
       company: "MEA Pack & Ship",
-      role: "Analytics Engineer",
+      role: "Platform Engineer",
       location: "Bridgeview, Illinois, United States · Remote",
       period: "May 2023 – Aug 2023",
       bullets: [
-        "Built and maintained web application features while collaborating through Git, pull requests, code reviews, and production bug resolution.",
-        "Improved deployment efficiency through CI/CD pipeline enhancements and Docker-based containerization, helping standardize development and release workflows.",
-        "Automated repetitive reporting and operational tasks with Python, improving accuracy, scalability, and reliability.",
-        "Delivered stakeholder-facing KPI dashboards using SQL, Excel, Python, and BI tools, translating raw data into actionable business insights."
+        "Built and shipped production web features, collaborating through Git, pull requests, code reviews, and log-based bug resolution across frontend and backend workflows.",
+        "Improved build and deployment automation by enhancing CI/CD pipelines with Jenkins/GitHub Actions and Docker-based containerization, helping standardize release workflows.",
+        "Automated repetitive operational and reporting tasks with Python scripting, improving reliability, scalability, and reducing manual effort.",
+        "Built stakeholder-facing KPI dashboards in Power BI/Tableau using Excel, SQL, and Python datasets, translating operational metrics into actionable business insights."
       ],
-      tags: ["Python", "Docker", "CI/CD", "SQL", "Analytics"]
+      tags: ["Python", "Docker", "Jenkins", "GitHub Actions", "CI/CD", "SQL", "Power BI", "Tableau", "Git"],
+      logo: "/company-logos/mea-pack-ship-logo.jpg",
+      logoAlt: "MEA Pack & Ship logo"
     },
     {
       company: "TheCoded Inc",
@@ -57,29 +62,39 @@ export function Experience() {
       location: "Remote",
       period: "Mar 2022 – Dec 2022",
       bullets: [
-        "Built and deployed workflow automation solutions using Microsoft Power Apps and Microsoft Flow, reducing manual data entry by 92%.",
-        "Integrated database-driven workflows using CDS and Azure services to improve application functionality, data flow, and operational efficiency.",
-        "Supported application quality through testing, troubleshooting, and log review, helping resolve issues and improve system reliability.",
-        "Improved document workflow automation by enabling PDF transcript generation, increasing portability and process efficiency by 35%."
+        "Developed workflow automation solutions using Microsoft Power Apps and Power Automate (MS Flow), reducing manual data entry by 92%.",
+        "Integrated relational data workflows with CDS/Dataverse and Azure services to improve application functionality, data flow, and operational efficiency.",
+        "Performed validation testing, troubleshooting, and log analysis to resolve issues and improve application reliability.",
+        "Enabled PDF transcript generation within a school database workflow, improving document portability and process efficiency by 35%."
       ],
-      tags: ["PowerApps", "Azure", "Automation", "Testing"]
+      tags: ["Power Apps", "Power Automate", "Azure", "CDS/Dataverse", "Testing", "Troubleshooting", "Workflow Automation"],
+      logo: "/company-logos/thecoded-inc-logo.jpg",
+      logoAlt: "TheCoded Inc logo"
     }
   ];
 
   const tagIcons: Record<string, any> = {
     React: Code,
+    TypeScript: Code,
     "REST APIs": Code,
+    "GitHub Actions": TrendingUp,
     "CI/CD": TrendingUp,
     Performance: Zap,
-    "GitHub Actions": TrendingUp,
+    Azure: Cloud,
+    Agile: TrendingUp,
     Python: Code,
     Docker: Cloud,
+    Jenkins: TrendingUp,
     SQL: Code,
-    Analytics: TrendingUp,
-    PowerApps: Code,
-    Azure: Cloud,
-    Automation: Zap,
+    "Power BI": TrendingUp,
+    Tableau: TrendingUp,
+    Git: Code,
+    "Power Apps": Code,
+    "Power Automate": Zap,
+    "CDS/Dataverse": Cloud,
     Testing: TrendingUp,
+    Troubleshooting: Zap,
+    "Workflow Automation": Zap,
   };
 
   return (
@@ -107,7 +122,7 @@ export function Experience() {
         >
           <h2 className="text-5xl font-bold text-white mb-4">Experience</h2>
           <p className="text-gray-400 text-lg">
-            Building impactful solutions across diverse environments
+            Building impactful software, platform, and automation solutions
           </p>
         </motion.div>
 
@@ -130,7 +145,7 @@ export function Experience() {
                 className="relative pl-20"
               >
                 <motion.div
-                  className="absolute left-5 top-6 w-7 h-7 rounded-full bg-[#0a0e27] border-2 border-[#0078d4] flex items-center justify-center group-hover:scale-125 transition-transform"
+                  className="absolute left-5 top-6 w-7 h-7 rounded-full bg-[#0a0e27] border-2 border-[#0078d4] flex items-center justify-center"
                   whileHover={{ scale: 1.3 }}
                 >
                   <motion.div
@@ -159,19 +174,24 @@ export function Experience() {
                   <div className="relative z-10">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-start gap-4">
-                        <div className="p-3 rounded-xl bg-[#0078d4]/10 border border-[#0078d4]/30">
-                          <Briefcase className="w-5 h-5 text-[#0078d4]" />
+                        <div className="w-14 h-14 p-2 rounded-xl bg-white/95 border border-white/10 flex items-center justify-center overflow-hidden shadow-sm">
+                          <img
+                            src={exp.logo}
+                            alt={exp.logoAlt}
+                            className="max-w-full max-h-full object-contain"
+                            loading="lazy"
+                          />
                         </div>
+
                         <div>
-                          <h3 className="text-xl text-white mb-1">
-                            {exp.role}
-                          </h3>
+                          <h3 className="text-xl text-white mb-1">{exp.role}</h3>
                           <p className="text-[#0078d4] mb-1">{exp.company}</p>
                           <p className="text-sm text-gray-400">
                             {exp.location} • {exp.period}
                           </p>
                         </div>
                       </div>
+
                       <motion.div
                         animate={{ rotate: expandedIndex === index ? 180 : 0 }}
                         transition={{ duration: 0.3 }}
