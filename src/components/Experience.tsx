@@ -174,11 +174,11 @@ export function Experience() {
                   <div className="relative z-10">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-start gap-4">
-                        <div className="w-14 h-14 p-2 rounded-xl bg-white/95 border border-white/10 flex items-center justify-center overflow-hidden shadow-sm">
+                        <div className="w-16 h-16 rounded-full bg-white border border-white/10 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
                           <img
                             src={exp.logo}
                             alt={exp.logoAlt}
-                            className="max-w-full max-h-full object-contain"
+                            className="w-full h-full object-contain p-2"
                             loading="lazy"
                           />
                         </div>
