@@ -238,14 +238,17 @@ export function Hero({ reduceMotion }: HeroProps) {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </motion.button>
 
-              <motion.button
+              <motion.a
+                href="/HamzaSyed_SoftwareEngineer.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 glass hover:border-[#0078d4] text-white rounded-full flex items-center gap-2 transition-all"
               >
                 <Download className="w-5 h-5" />
                 Download Resume
-              </motion.button>
+              </motion.a>
 
               <motion.button
                 onClick={scrollToContact}
