@@ -164,7 +164,7 @@ export default function PreLoader({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.35 }}
+          transition={{ duration: 0.3 }}
           className="fixed inset-0 z-50 flex items-center justify-center"
         >
           <motion.div
@@ -172,55 +172,58 @@ export default function PreLoader({
             animate={
               !reduceMotion && glitchActive
                 ? {
-                    scale: [1, 1.005, 0.997, 1],
+                    scale: [1, 1.006, 0.996, 1],
                     x: [0, -2, 2, -1, 0],
                     y: [0, 1, -1, 0],
                   }
                 : { scale: 1, opacity: 1, x: 0, y: 0 }
             }
-            exit={{ scale: 1.04, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
+            exit={{ scale: 1.03, opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
             className="relative w-full max-w-2xl mx-4 p-8 md:p-12 rounded-2xl overflow-hidden shadow-2xl"
           >
-            {/* stronger outer neon frame */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 opacity-90 z-0" />
+            {/* Strong visible outer frame */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 opacity-95 z-0" />
 
-            {/* dark terminal body - much less transparent */}
-            <div className="absolute inset-[3px] rounded-[14px] bg-[#060914]/98 z-[1]" />
+            {/* Thick dark terminal body */}
+            <div className="absolute inset-[3px] rounded-[18px] bg-[#050914] z-[1]" />
 
-            {/* subtle inner color wash */}
-            <div className="absolute inset-[3px] rounded-[14px] z-[1] bg-[radial-gradient(circle_at_18%_18%,rgba(0,191,255,0.12),transparent_28%),radial-gradient(circle_at_82%_18%,rgba(255,0,153,0.09),transparent_26%),radial-gradient(circle_at_50%_100%,rgba(119,0,255,0.08),transparent_30%)]" />
+            {/* Inner tinted wash */}
+            <div className="absolute inset-[3px] rounded-[18px] z-[1] bg-[radial-gradient(circle_at_15%_25%,rgba(0,191,255,0.14),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(255,0,153,0.10),transparent_24%),radial-gradient(circle_at_50%_100%,rgba(131,56,236,0.10),transparent_30%)]" />
 
-            {/* visible border glow */}
+            {/* Strong visible panel darkener */}
+            <div className="absolute inset-[3px] rounded-[18px] bg-black/45 z-[1]" />
+
+            {/* Frame glow */}
             <div
               className="absolute inset-0 rounded-2xl pointer-events-none z-[1]"
               style={{
                 boxShadow:
-                  "0 0 30px rgba(0,191,255,0.22), 0 0 55px rgba(255,0,153,0.12)",
+                  "0 0 28px rgba(0,191,255,0.30), 0 0 55px rgba(255,0,153,0.16)",
               }}
             />
 
-            {/* corner frame accents */}
-            <div className="absolute top-0 left-0 w-20 h-20 z-[2]">
-              <div className="absolute top-4 left-4 w-14 h-[2px] bg-gradient-to-r from-cyan-400 to-transparent" />
-              <div className="absolute top-4 left-4 w-[2px] h-14 bg-gradient-to-b from-cyan-400 to-transparent" />
+            {/* Corner accents */}
+            <div className="absolute top-0 left-0 w-24 h-24 z-[2]">
+              <div className="absolute top-5 left-5 w-14 h-[2px] bg-gradient-to-r from-cyan-400 to-transparent" />
+              <div className="absolute top-5 left-5 w-[2px] h-14 bg-gradient-to-b from-cyan-400 to-transparent" />
             </div>
-            <div className="absolute top-0 right-0 w-20 h-20 z-[2]">
-              <div className="absolute top-4 right-4 w-14 h-[2px] bg-gradient-to-l from-fuchsia-400 to-transparent" />
-              <div className="absolute top-4 right-4 w-[2px] h-14 bg-gradient-to-b from-fuchsia-400 to-transparent" />
+            <div className="absolute top-0 right-0 w-24 h-24 z-[2]">
+              <div className="absolute top-5 right-5 w-14 h-[2px] bg-gradient-to-l from-fuchsia-400 to-transparent" />
+              <div className="absolute top-5 right-5 w-[2px] h-14 bg-gradient-to-b from-fuchsia-400 to-transparent" />
             </div>
-            <div className="absolute bottom-0 left-0 w-20 h-20 z-[2]">
-              <div className="absolute bottom-4 left-4 w-14 h-[2px] bg-gradient-to-r from-violet-400 to-transparent" />
-              <div className="absolute bottom-4 left-4 w-[2px] h-14 bg-gradient-to-t from-violet-400 to-transparent" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 z-[2]">
+              <div className="absolute bottom-5 left-5 w-14 h-[2px] bg-gradient-to-r from-violet-400 to-transparent" />
+              <div className="absolute bottom-5 left-5 w-[2px] h-14 bg-gradient-to-t from-violet-400 to-transparent" />
             </div>
-            <div className="absolute bottom-0 right-0 w-20 h-20 z-[2]">
-              <div className="absolute bottom-4 right-4 w-14 h-[2px] bg-gradient-to-l from-cyan-400 to-transparent" />
-              <div className="absolute bottom-4 right-4 w-[2px] h-14 bg-gradient-to-t from-cyan-400 to-transparent" />
+            <div className="absolute bottom-0 right-0 w-24 h-24 z-[2]">
+              <div className="absolute bottom-5 right-5 w-14 h-[2px] bg-gradient-to-l from-cyan-400 to-transparent" />
+              <div className="absolute bottom-5 right-5 w-[2px] h-14 bg-gradient-to-t from-cyan-400 to-transparent" />
             </div>
 
-            {/* terminal grid */}
+            {/* Grid */}
             <div
-              className="absolute inset-[3px] rounded-[14px] pointer-events-none z-[2]"
+              className="absolute inset-[3px] rounded-[18px] pointer-events-none z-[2]"
               style={{
                 backgroundImage: `
                   linear-gradient(rgba(0,255,255,0.08) 1px, transparent 1px),
@@ -231,12 +234,12 @@ export default function PreLoader({
               }}
             />
 
-            {/* scanlines */}
+            {/* Scanlines */}
             {!reduceMotion && (
               <motion.div
                 animate={{ y: ["0%", "100%"] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-[3px] rounded-[14px] pointer-events-none z-[2]"
+                className="absolute inset-[3px] rounded-[18px] pointer-events-none z-[2]"
                 style={{
                   backgroundImage:
                     "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,255,0.02) 3px, rgba(0,255,255,0.02) 4px)",
@@ -244,10 +247,10 @@ export default function PreLoader({
               />
             )}
 
-            {/* frame-only glitch bars */}
+            {/* Cyberpunk shell glitch only */}
             {!reduceMotion && (
-              <div className="absolute inset-[3px] rounded-[14px] overflow-hidden pointer-events-none z-[4]">
-                {[12, 26, 44, 61, 76].map((top, i) => (
+              <div className="absolute inset-[3px] rounded-[18px] overflow-hidden pointer-events-none z-[4]">
+                {[14, 28, 42, 57, 73].map((top, i) => (
                   <motion.div
                     key={i}
                     className="absolute left-0 right-0"
@@ -255,66 +258,62 @@ export default function PreLoader({
                       top: `${top}%`,
                       height: i % 2 === 0 ? "12px" : "18px",
                       background:
-                        "linear-gradient(90deg, transparent 0%, rgba(0,255,255,0.22) 20%, rgba(255,0,153,0.18) 52%, transparent 100%)",
+                        "linear-gradient(90deg, transparent 0%, rgba(0,255,255,0.22) 20%, rgba(255,0,153,0.16) 52%, transparent 100%)",
                       mixBlendMode: "screen",
                     }}
                     animate={
                       glitchActive
                         ? {
-                            x: [0, i % 2 === 0 ? -36 : 30, 16, 0],
-                            opacity: [0, 1, 0.6, 0],
-                            skewX: [0, -14, 8, 0],
+                            x: [0, i % 2 === 0 ? -34 : 28, 14, 0],
+                            opacity: [0, 1, 0.55, 0],
+                            skewX: [0, -12, 6, 0],
                           }
                         : { opacity: 0 }
                     }
-                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
                   />
                 ))}
 
-                {/* quick white scan flash */}
+                {/* quick shell flash */}
                 <motion.div
                   className="absolute inset-0"
                   animate={
                     glitchActive
                       ? {
-                          opacity: [0, 0.14, 0],
+                          opacity: [0, 0.12, 0],
                           backgroundPositionX: ["0%", "100%", "0%"],
                         }
                       : { opacity: 0 }
                   }
-                  transition={{ duration: 0.18 }}
+                  transition={{ duration: 0.16 }}
                   style={{
                     backgroundImage:
-                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 48%, transparent 52%)",
+                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.07) 48%, transparent 52%)",
                     backgroundSize: "220px 100%",
                   }}
                 />
 
-                {/* frame chromatic split, not text */}
+                {/* frame chromatic split */}
                 <motion.div
                   animate={
-                    glitchActive
-                      ? { opacity: [0, 0.35, 0] }
-                      : { opacity: 0 }
+                    glitchActive ? { opacity: [0, 0.35, 0] } : { opacity: 0 }
                   }
-                  transition={{ duration: 0.18 }}
-                  className="absolute inset-0 border border-cyan-300/40 rounded-[14px]"
+                  transition={{ duration: 0.16 }}
+                  className="absolute inset-0 rounded-[18px] border border-cyan-300/50"
                   style={{ transform: "translateX(-2px)" }}
                 />
                 <motion.div
                   animate={
-                    glitchActive
-                      ? { opacity: [0, 0.28, 0] }
-                      : { opacity: 0 }
+                    glitchActive ? { opacity: [0, 0.28, 0] } : { opacity: 0 }
                   }
-                  transition={{ duration: 0.18 }}
-                  className="absolute inset-0 border border-fuchsia-400/35 rounded-[14px]"
+                  transition={{ duration: 0.16 }}
+                  className="absolute inset-0 rounded-[18px] border border-fuchsia-400/40"
                   style={{ transform: "translateX(2px)" }}
                 />
               </div>
             )}
 
-            {/* particles */}
+            {/* Particles */}
             {!reduceMotion &&
               [...Array(8)].map((_, i) => (
                 <motion.div
@@ -343,7 +342,7 @@ export default function PreLoader({
                 />
               ))}
 
-            {/* content stays normal */}
+            {/* Content stays normal */}
             <div className="relative z-[5]">
               <div className="mb-6 text-center">
                 <span className="text-lg md:text-xl text-white/90 font-light tracking-wide">
@@ -367,11 +366,9 @@ export default function PreLoader({
                   if (index < currentLine) {
                     return renderCompletedLine(line, index);
                   }
-
                   if (index === currentLine) {
                     return <div key={index}>{renderTypingLine(typedText)}</div>;
                   }
-
                   return null;
                 })}
               </div>
