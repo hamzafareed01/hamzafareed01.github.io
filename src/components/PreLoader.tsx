@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface PreLoaderProps {
   onComplete: () => void;
@@ -7,72 +7,84 @@ interface PreLoaderProps {
 }
 
 const terminalLines = [
-  { text: '$ Initializing deployment pipeline...', delay: 0 },
-  { text: '✓ Orchestrating containerized services', delay: 0.8 },
-  { text: '✓ Configuring cloud infrastructure', delay: 1.6 },
-  { text: '✓ Syncing distributed systems', delay: 2.4 },
-  { text: '✓ Optimizing performance metrics', delay: 3.2 },
-  { text: '> Deployment successful!', delay: 4.0 },
+  "$ Initializing deployment pipeline...",
+  "✓ Orchestrating containerized services",
+  "✓ Configuring cloud infrastructure",
+  "✓ Syncing distributed systems",
+  "✓ Optimizing performance metrics",
+  "> Deployment successful!",
 ];
 
-export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) {
+export default function PreLoader({
+  onComplete,
+  reduceMotion,
+}: PreLoaderProps) {
   const [currentLine, setCurrentLine] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-  const [typedText, setTypedText] = useState('');
+  const [typedText, setTypedText] = useState("");
 
   useEffect(() => {
     if (reduceMotion) {
-      // Skip animation if reduce motion is preferred
-      setTimeout(() => {
+      const skipTimer = setTimeout(() => {
         setIsComplete(true);
-        setTimeout(onComplete, 300);
+        setTimeout(onComplete, 250);
       }, 800);
-      return;
+
+      return () => clearTimeout(skipTimer);
     }
 
-    // Typing effect for current line
-    let typingTimer: NodeJS.Timeout;
+    let typingTimer: ReturnType<typeof setTimeout>;
+
     if (currentLine < terminalLines.length) {
-      const fullText = terminalLines[currentLine].text;
+      const fullText = terminalLines[currentLine];
       let charIndex = 0;
 
       const typeNextChar = () => {
         if (charIndex <= fullText.length) {
           setTypedText(fullText.substring(0, charIndex));
           charIndex++;
-          typingTimer = setTimeout(typeNextChar, 15); // 15ms per character (faster)
+          typingTimer = setTimeout(typeNextChar, 16);
         } else {
-          // Move to next line after a brief pause
-          setTimeout(() => {
-            setCurrentLine((prev) => prev + 1);
-            setTypedText('');
-          }, 180); // Reduced pause
+          typingTimer = setTimeout(() => {
+            setCurrentLine((prev: number) => prev + 1);
+            setTypedText("");
+          }, 180);
         }
       };
 
       typeNextChar();
     }
 
-    // Smooth progress bar (total 4.7s to reach 100%)
+    return () => clearTimeout(typingTimer);
+  }, [currentLine, reduceMotion, onComplete]);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+
     const progressInterval = setInterval(() => {
-      setProgress((prev) => {
+      setProgress((prev: number) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
-          // Trigger completion immediately when progress reaches 100%
-          setIsComplete(true);
-          setTimeout(onComplete, 300);
           return 100;
         }
         return prev + 1;
       });
-    }, 47); // 47ms per percent = 4700ms total
+    }, 47);
 
-    return () => {
-      clearTimeout(typingTimer);
-      clearInterval(progressInterval);
-    };
-  }, [onComplete, reduceMotion, currentLine]);
+    return () => clearInterval(progressInterval);
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    if (progress >= 100) {
+      setIsComplete(true);
+      const completeTimer = setTimeout(() => {
+        onComplete();
+      }, 300);
+
+      return () => clearTimeout(completeTimer);
+    }
+  }, [progress, onComplete]);
 
   return (
     <AnimatePresence>
@@ -81,197 +93,236 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.35 }}
           className="fixed inset-0 z-50 flex items-center justify-center"
         >
-          {/* Cyberpunk terminal card */}
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.94, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 1.1, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="relative w-full max-w-2xl mx-4 p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl shadow-2xl overflow-hidden"
+            exit={{ scale: 1.04, opacity: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="relative w-full max-w-2xl mx-4 p-8 md:p-12 rounded-2xl bg-[#05070d]/80 backdrop-blur-xl shadow-2xl overflow-hidden"
           >
-            {/* Neon border effect */}
+            {/* outer neon border */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 opacity-60 z-0" />
+
+            {/* inner dark panel */}
             <div className="absolute top-[2px] right-[2px] bottom-[2px] left-[2px] rounded-2xl bg-[#070b14]/95 z-[1]" />
 
-            {/* Animated corner accents */}
-            <div className="absolute top-0 left-0 w-20 h-20">
+            {/* animated corner accents */}
+            <div className="absolute top-0 left-0 w-20 h-20 z-[2]">
               <div className="absolute top-4 left-4 w-12 h-[2px] bg-gradient-to-r from-cyan-400 to-transparent" />
               <div className="absolute top-4 left-4 w-[2px] h-12 bg-gradient-to-b from-cyan-400 to-transparent" />
             </div>
-            <div className="absolute top-0 right-0 w-20 h-20">
-              <div className="absolute top-4 right-4 w-12 h-[2px] bg-gradient-to-l from-pink-400 to-transparent" />
-              <div className="absolute top-4 right-4 w-[2px] h-12 bg-gradient-to-b from-pink-400 to-transparent" />
+
+            <div className="absolute top-0 right-0 w-20 h-20 z-[2]">
+              <div className="absolute top-4 right-4 w-12 h-[2px] bg-gradient-to-l from-fuchsia-400 to-transparent" />
+              <div className="absolute top-4 right-4 w-[2px] h-12 bg-gradient-to-b from-fuchsia-400 to-transparent" />
             </div>
-            <div className="absolute bottom-0 left-0 w-20 h-20">
-              <div className="absolute bottom-4 left-4 w-12 h-[2px] bg-gradient-to-r from-purple-400 to-transparent" />
-              <div className="absolute bottom-4 left-4 w-[2px] h-12 bg-gradient-to-t from-purple-400 to-transparent" />
+
+            <div className="absolute bottom-0 left-0 w-20 h-20 z-[2]">
+              <div className="absolute bottom-4 left-4 w-12 h-[2px] bg-gradient-to-r from-violet-400 to-transparent" />
+              <div className="absolute bottom-4 left-4 w-[2px] h-12 bg-gradient-to-t from-violet-400 to-transparent" />
             </div>
-            <div className="absolute bottom-0 right-0 w-20 h-20">
+
+            <div className="absolute bottom-0 right-0 w-20 h-20 z-[2]">
               <div className="absolute bottom-4 right-4 w-12 h-[2px] bg-gradient-to-l from-cyan-400 to-transparent" />
               <div className="absolute bottom-4 right-4 w-[2px] h-12 bg-gradient-to-t from-cyan-400 to-transparent" />
             </div>
 
-            {/* Scanlines effect */}
-            {!reduceMotion && (
-              <motion.div
-                animate={{ y: ['0%', '100%'] }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 255, 0.03) 2px, rgba(0, 255, 255, 0.03) 4px)',
-                }}
-              />
-            )}
-
-            {/* Grid pattern overlay */}
+            {/* subtle grid */}
             <div
-              className="absolute inset-0 opacity-5 pointer-events-none"
+              className="absolute top-[2px] right-[2px] bottom-[2px] left-[2px] rounded-2xl pointer-events-none z-[2]"
               style={{
                 backgroundImage: `
-                  linear-gradient(rgba(0, 255, 255, 0.5) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(0, 255, 255, 0.5) 1px, transparent 1px)
+                  linear-gradient(rgba(0, 255, 255, 0.07) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0, 255, 255, 0.07) 1px, transparent 1px)
                 `,
-                backgroundSize: '20px 20px'
+                backgroundSize: "24px 24px",
+                opacity: 0.22,
               }}
             />
 
-            {/* Glowing particles */}
-            {!reduceMotion && [...Array(8)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 rounded-full"
-                style={{
-                  background: i % 3 === 0 ? '#00ffff' : i % 3 === 1 ? '#ff00ff' : '#ff0080',
-                  left: `${10 + i * 12}%`,
-                  top: `${20 + (i % 3) * 20}%`,
-                }}
-                animate={{
-                  opacity: [0.2, 0.8, 0.2],
-                  scale: [1, 1.5, 1],
-                  y: [0, -10, 0],
-                }}
-                transition={{
-                  duration: 2 + i * 0.3,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                }}
-              />
-            ))}
-
-            {/* Pulsing glow on edges */}
+            {/* scanlines */}
             {!reduceMotion && (
               <motion.div
-                animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-                className="absolute inset-0 rounded-2xl"
+                animate={{ y: ["0%", "100%"] }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                className="absolute top-[2px] right-[2px] bottom-[2px] left-[2px] rounded-2xl pointer-events-none z-[2]"
                 style={{
-                  boxShadow: '0 0 30px rgba(0, 255, 255, 0.5), inset 0 0 30px rgba(255, 0, 255, 0.3)',
+                  backgroundImage:
+                    "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 255, 255, 0.018) 3px, rgba(0, 255, 255, 0.018) 4px)",
                 }}
               />
             )}
 
-            {/* Content wrapper with z-index */}
-            <div className="relative z-10">
-              {/* Tagline above terminal - fades in word by word */}
+            {/* subtle particles */}
+            {!reduceMotion &&
+              [...Array(8)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 rounded-full z-[2]"
+                  style={{
+                    background:
+                      i % 3 === 0
+                        ? "#00d9ff"
+                        : i % 3 === 1
+                          ? "#b100ff"
+                          : "#ff2da1",
+                    left: `${12 + i * 10}%`,
+                    top: `${18 + (i % 3) * 18}%`,
+                  }}
+                  animate={{
+                    opacity: [0.15, 0.55, 0.15],
+                    scale: [1, 1.4, 1],
+                    y: [0, -8, 0],
+                  }}
+                  transition={{
+                    duration: 2 + i * 0.25,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+
+            {/* restrained glow */}
+            {!reduceMotion && (
+              <motion.div
+                animate={{ opacity: [0.22, 0.38, 0.22] }}
+                transition={{
+                  duration: 3.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute inset-0 rounded-2xl pointer-events-none z-[1]"
+                style={{
+                  boxShadow:
+                    "0 0 22px rgba(0, 190, 255, 0.22), inset 0 0 18px rgba(118, 0, 255, 0.10)",
+                }}
+              />
+            )}
+
+            {/* content */}
+            <div className="relative z-[5]">
+              {/* tagline */}
               <div className="mb-6 text-center">
                 <div className="flex items-center justify-center gap-2 flex-wrap">
-                  {['Turning', 'code', 'into', 'intuitive', 'design'].map((word, index) => (
-                    <motion.span
-                      key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.5,
-                        delay: index * 0.2,
-                        ease: 'easeOut'
-                      }}
-                      className="text-lg md:text-xl text-white/90 font-light"
-                    >
-                      {word}
-                    </motion.span>
-                  ))}
+                  {["Turning", "code", "into", "intuitive", "design"].map(
+                    (word, index) => (
+                      <motion.span
+                        key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.45,
+                          delay: index * 0.16,
+                          ease: "easeOut",
+                        }}
+                        className="text-lg md:text-xl text-white/90 font-light"
+                      >
+                        {word}
+                      </motion.span>
+                    ),
+                  )}
                 </div>
               </div>
 
-              {/* Terminal header */}
+              {/* terminal header */}
               <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/10">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/80" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                   <div className="w-3 h-3 rounded-full bg-green-500/80" />
                 </div>
-                <span className="ml-3 text-sm text-white/50 font-mono">hamza-syed@portfolio</span>
+                <span className="ml-3 text-sm text-white/50 font-mono">
+                  hamza-syed@portfolio
+                </span>
               </div>
 
-              {/* Terminal content */}
+              {/* terminal content */}
               <div className="space-y-3 min-h-[200px] mb-8">
                 {terminalLines.map((line, index) => {
                   if (index < currentLine) {
-                    // Already completed lines - show full text
                     return (
                       <div
                         key={index}
                         className="font-mono text-sm md:text-base flex items-center gap-2"
                       >
-                        {line.text.startsWith('$') && (
-                          <span className="text-[#0078d4] font-bold">{line.text.charAt(0)}</span>
+                        {line.startsWith("$") && (
+                          <span className="text-[#00bfff] font-bold">
+                            {line.charAt(0)}
+                          </span>
                         )}
-                        {line.text.startsWith('✓') && (
-                          <span className="text-emerald-400">{line.text.charAt(0)}</span>
+                        {line.startsWith("✓") && (
+                          <span className="text-emerald-400">
+                            {line.charAt(0)}
+                          </span>
                         )}
-                        {line.text.startsWith('>') && (
-                          <span className="text-[#0078d4] font-bold">{line.text.charAt(0)}</span>
+                        {line.startsWith(">") && (
+                          <span className="text-[#00bfff] font-bold">
+                            {line.charAt(0)}
+                          </span>
                         )}
-                        <span className={line.text.startsWith('>') ? 'text-white font-semibold' : 'text-white/80'}>
-                          {line.text.substring(2)}
+                        <span
+                          className={
+                            line.startsWith(">")
+                              ? "text-white font-semibold"
+                              : "text-white/80"
+                          }
+                        >
+                          {line.substring(2)}
                         </span>
                       </div>
                     );
-                  } else if (index === currentLine) {
-                    // Current line being typed
+                  }
+
+                  if (index === currentLine) {
                     return (
                       <div
                         key={index}
                         className="font-mono text-sm md:text-base flex items-center gap-2"
                       >
-                        {typedText.startsWith('$') && (
-                          <span className="text-[#0078d4] font-bold">{typedText.charAt(0)}</span>
+                        {typedText.startsWith("$") && (
+                          <span className="text-[#00bfff] font-bold">
+                            {typedText.charAt(0)}
+                          </span>
                         )}
-                        {typedText.startsWith('✓') && (
-                          <span className="text-emerald-400">{typedText.charAt(0)}</span>
+                        {typedText.startsWith("✓") && (
+                          <span className="text-emerald-400">
+                            {typedText.charAt(0)}
+                          </span>
                         )}
-                        {typedText.startsWith('>') && (
-                          <span className="text-[#0078d4] font-bold">{typedText.charAt(0)}</span>
+                        {typedText.startsWith(">") && (
+                          <span className="text-[#00bfff] font-bold">
+                            {typedText.charAt(0)}
+                          </span>
                         )}
-                        <span className={typedText.startsWith('>') ? 'text-white font-semibold' : 'text-white/80'}>
+                        <span
+                          className={
+                            typedText.startsWith(">")
+                              ? "text-white font-semibold"
+                              : "text-white/80"
+                          }
+                        >
                           {typedText.substring(2)}
                         </span>
 
-                        {/* Blinking cursor */}
                         {!reduceMotion && (
                           <motion.span
                             animate={{ opacity: [1, 0, 1] }}
                             transition={{ duration: 0.8, repeat: Infinity }}
-                            className="inline-block w-2 h-4 bg-[#0078d4] ml-1"
+                            className="inline-block w-2 h-4 bg-[#00bfff] ml-1"
                           />
                         )}
                       </div>
                     );
                   }
+
                   return null;
                 })}
               </div>
 
-              {/* Progress bar */}
+              {/* progress */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-xs font-mono text-white/50">
                   <span>Loading</span>
@@ -281,38 +332,39 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                 <div className="relative">
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                     <motion.div
-                      initial={{ width: '0%' }}
+                      initial={{ width: "0%" }}
                       animate={{ width: `${progress}%` }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                      className="h-full bg-gradient-to-r from-[#0078d4] to-[#00a8e8] rounded-full relative"
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      className="h-full bg-gradient-to-r from-[#0078d4] to-[#00c8ff] rounded-full relative"
                     >
-                      {/* Shimmer effect */}
                       {!reduceMotion && progress < 100 && (
                         <motion.div
-                          animate={{ x: ['-100%', '100%'] }}
-                          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                          animate={{ x: ["-100%", "100%"] }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
                           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                         />
                       )}
                     </motion.div>
                   </div>
 
-                  {/* Rocket animation - Bigger and horizontal */}
+                  {/* rocket */}
                   <motion.div
-                    initial={{ left: '0%' }}
+                    initial={{ left: "0%" }}
                     animate={{ left: `${progress}%` }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className="absolute -top-12 transform -translate-x-1/2"
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="absolute -top-12 -translate-x-1/2"
                     style={{ left: `${progress}%` }}
                   >
-                    {/* Enhanced rocket trail/exhaust particles */}
                     {!reduceMotion && progress > 2 && progress < 100 && (
                       <div className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none">
-                        {/* Main exhaust flame */}
                         <motion.div
                           animate={{
-                            scale: [1, 1.3, 1],
-                            opacity: [0.8, 0.5, 0.8]
+                            scale: [1, 1.25, 1],
+                            opacity: [0.8, 0.45, 0.8],
                           }}
                           transition={{ duration: 0.3, repeat: Infinity }}
                           className="absolute -left-8 top-1/2 -translate-y-1/2 w-16 h-8"
@@ -320,110 +372,48 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                           <div className="absolute inset-0 bg-gradient-to-r from-orange-500/60 via-yellow-400/50 to-transparent rounded-full blur-md" />
                         </motion.div>
 
-                        {/* Secondary flame layer */}
                         <motion.div
                           animate={{
-                            scale: [1.2, 1, 1.2],
-                            opacity: [0.6, 0.8, 0.6]
+                            scale: [1.15, 1, 1.15],
+                            opacity: [0.6, 0.8, 0.6],
                           }}
                           transition={{ duration: 0.25, repeat: Infinity }}
                           className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-6"
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-red-500/50 via-orange-400/40 to-transparent rounded-full blur-sm" />
                         </motion.div>
-
-                        {/* Exhaust particles */}
-                        {[...Array(5)].map((_, i) => (
-                          <motion.div
-                            key={i}
-                            animate={{
-                              x: [-10 - i * 8, -30 - i * 12],
-                              y: [0, (i % 2 === 0 ? -1 : 1) * 8],
-                              scale: [1, 0.3],
-                              opacity: [0.8, 0],
-                            }}
-                            transition={{
-                              duration: 0.5,
-                              repeat: Infinity,
-                              delay: i * 0.1,
-                              ease: 'easeOut',
-                            }}
-                            className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
-                            style={{
-                              background: i % 2 === 0
-                                ? 'radial-gradient(circle, rgba(255, 165, 0, 0.8), transparent)'
-                                : 'radial-gradient(circle, rgba(255, 69, 0, 0.8), transparent)',
-                            }}
-                          />
-                        ))}
-
-                        {/* Smoke trail */}
-                        <motion.div
-                          animate={{
-                            x: [-20, -60],
-                            scale: [0.8, 1.5],
-                            opacity: [0.4, 0],
-                          }}
-                          transition={{
-                            duration: 0.8,
-                            repeat: Infinity,
-                            ease: 'easeOut',
-                          }}
-                          className="absolute -left-10 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-gray-400/20 blur-xl"
-                        />
                       </div>
                     )}
 
-                    {/* Rocket emoji - bigger and straight */}
                     <motion.div
                       animate={
-                        !reduceMotion && progress < 100
-                          ? { y: [0, -2, 0] }
-                          : {}
+                        !reduceMotion && progress < 100 ? { y: [0, -2, 0] } : {}
                       }
-                      transition={{ duration: 0.4, repeat: Infinity, ease: 'easeInOut' }}
+                      transition={{
+                        duration: 0.4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
                       className="relative z-10"
                     >
-                      <span className="text-4xl block transform rotate-0" role="img" aria-label="rocket">
+                      <span
+                        className="text-4xl block"
+                        role="img"
+                        aria-label="rocket"
+                      >
                         🚀
                       </span>
                     </motion.div>
-
-                    {/* Speed lines */}
-                    {!reduceMotion && progress > 10 && progress < 100 && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none">
-                        {[...Array(3)].map((_, i) => (
-                          <motion.div
-                            key={i}
-                            animate={{
-                              x: [-20, -50],
-                              opacity: [0.6, 0],
-                            }}
-                            transition={{
-                              duration: 0.4,
-                              repeat: Infinity,
-                              delay: i * 0.1,
-                              ease: 'linear',
-                            }}
-                            className="absolute h-[2px] rounded-full bg-gradient-to-r from-[#0078d4]/60 to-transparent"
-                            style={{
-                              width: 20 + i * 5,
-                              top: -4 + i * 4,
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
                   </motion.div>
                 </div>
               </div>
 
-              {/* Skip button */}
+              {/* skip */}
               <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
                 whileHover={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.4 }}
                 onClick={() => {
                   setIsComplete(true);
                   onComplete();
