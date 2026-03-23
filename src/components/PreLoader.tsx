@@ -92,15 +92,28 @@ export default function PreLoader({
 
     const glitchInterval = setInterval(() => {
       setGlitchActive(true);
-      setTimeout(() => setGlitchActive(false), 140);
-    }, 2200);
+      setTimeout(() => setGlitchActive(false), 260);
+    }, 1400);
 
     return () => clearInterval(glitchInterval);
   }, [reduceMotion]);
 
   const renderCompletedLine = (line: string, index: number) => (
-    <div
+    <motion.div
       key={index}
+      animate={
+        !reduceMotion && glitchActive
+          ? {
+            x: [0, -2, 2, 0],
+            filter: [
+              "none",
+              "drop-shadow(-2px 0 0 rgba(0,255,255,0.7)) drop-shadow(2px 0 0 rgba(255,0,153,0.55))",
+              "none",
+            ],
+          }
+          : { x: 0, filter: "none" }
+      }
+      transition={{ duration: 0.18 }}
       className="relative font-mono text-sm md:text-base flex items-center gap-2"
     >
       {line.startsWith("$") && (
@@ -126,24 +139,39 @@ export default function PreLoader({
       {!reduceMotion && glitchActive && (
         <>
           <span
-            className="absolute left-[18px] text-cyan-300/40 pointer-events-none"
-            style={{ transform: "translateX(-1px)" }}
+            className="absolute left-[18px] text-cyan-300/70 pointer-events-none"
+            style={{ transform: "translateX(-2px)" }}
           >
             {line.substring(2)}
           </span>
           <span
-            className="absolute left-[18px] text-fuchsia-400/35 pointer-events-none"
-            style={{ transform: "translateX(1px)" }}
+            className="absolute left-[18px] text-fuchsia-400/55 pointer-events-none"
+            style={{ transform: "translateX(2px)" }}
           >
             {line.substring(2)}
           </span>
         </>
       )}
-    </div>
+    </motion.div>
   );
 
   const renderTypingLine = (line: string) => (
-    <div className="relative font-mono text-sm md:text-base flex items-center gap-2">
+    <motion.div
+      animate={
+        !reduceMotion && glitchActive
+          ? {
+            x: [0, -2, 2, 0],
+            filter: [
+              "none",
+              "drop-shadow(-2px 0 0 rgba(0,255,255,0.8)) drop-shadow(2px 0 0 rgba(255,0,153,0.6))",
+              "none",
+            ],
+          }
+          : { x: 0, filter: "none" }
+      }
+      transition={{ duration: 0.18 }}
+      className="relative font-mono text-sm md:text-base flex items-center gap-2"
+    >
       {line.startsWith("$") && (
         <span className="text-[#00bfff] font-bold">{line.charAt(0)}</span>
       )}
@@ -175,20 +203,20 @@ export default function PreLoader({
       {!reduceMotion && glitchActive && (
         <>
           <span
-            className="absolute left-[18px] text-cyan-300/45 pointer-events-none"
-            style={{ transform: "translateX(-1px)" }}
+            className="absolute left-[18px] text-cyan-300/75 pointer-events-none"
+            style={{ transform: "translateX(-2px)" }}
           >
             {line.substring(2)}
           </span>
           <span
-            className="absolute left-[18px] text-fuchsia-400/35 pointer-events-none"
-            style={{ transform: "translateX(1px)" }}
+            className="absolute left-[18px] text-fuchsia-400/55 pointer-events-none"
+            style={{ transform: "translateX(2px)" }}
           >
             {line.substring(2)}
           </span>
         </>
       )}
-    </div>
+    </motion.div>
   );
 
   return (
@@ -267,29 +295,48 @@ export default function PreLoader({
 
             {/* glitch bars */}
             {!reduceMotion && (
-              <div className="absolute inset-[2px] rounded-2xl overflow-hidden pointer-events-none z-[3]">
-                {[18, 32, 46, 64].map((top, i) => (
+              <div className="absolute inset-[2px] rounded-2xl overflow-hidden pointer-events-none z-[4]">
+                {[14, 26, 39, 57, 71].map((top, i) => (
                   <motion.div
                     key={i}
-                    className="absolute left-0 right-0 h-[10px]"
+                    className="absolute left-0 right-0"
                     style={{
                       top: `${top}%`,
+                      height: i % 2 === 0 ? "12px" : "18px",
                       background:
-                        "linear-gradient(90deg, transparent 0%, rgba(0,255,255,0.14) 30%, rgba(255,0,153,0.12) 60%, transparent 100%)",
+                        "linear-gradient(90deg, transparent 0%, rgba(0,255,255,0.28) 18%, rgba(255,0,153,0.24) 52%, rgba(255,255,255,0.08) 70%, transparent 100%)",
                       mixBlendMode: "screen",
                     }}
                     animate={
                       glitchActive
                         ? {
-                            x: [0, i % 2 === 0 ? -16 : 14, 0],
-                            opacity: [0, 0.9, 0],
-                            skewX: [0, -12, 0],
-                          }
+                          x: [0, i % 2 === 0 ? -42 : 34, i % 2 === 0 ? 18 : -14, 0],
+                          opacity: [0, 1, 0.8, 0],
+                          skewX: [0, -18, 10, 0],
+                        }
                         : { opacity: 0 }
                     }
-                    transition={{ duration: 0.16, ease: "easeOut" }}
+                    transition={{ duration: 0.24, ease: "easeOut" }}
                   />
                 ))}
+
+                <motion.div
+                  className="absolute inset-0"
+                  animate={
+                    glitchActive
+                      ? {
+                        opacity: [0, 0.18, 0],
+                        backgroundPositionX: ["0%", "100%", "0%"],
+                      }
+                      : { opacity: 0 }
+                  }
+                  transition={{ duration: 0.22 }}
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 48%, transparent 52%)",
+                    backgroundSize: "220px 100%",
+                  }}
+                />
               </div>
             )}
 
@@ -346,13 +393,22 @@ export default function PreLoader({
                 <motion.div
                   animate={
                     !reduceMotion && glitchActive
-                      ? { x: [0, -2, 2, 0] }
-                      : { x: 0 }
+                      ? {
+                        x: [0, -4, 3, -2, 0],
+                        skewX: [0, -8, 6, -4, 0],
+                        filter: [
+                          "drop-shadow(0 0 0px rgba(0,0,0,0))",
+                          "drop-shadow(-3px 0 0 rgba(0,255,255,0.9)) drop-shadow(3px 0 0 rgba(255,0,153,0.8))",
+                          "drop-shadow(-1px 0 0 rgba(0,255,255,0.7)) drop-shadow(1px 0 0 rgba(255,0,153,0.6))",
+                          "drop-shadow(0 0 0px rgba(0,0,0,0))",
+                        ],
+                      }
+                      : { x: 0, skewX: 0, filter: "none" }
                   }
-                  transition={{ duration: 0.12 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
                   className="relative inline-block"
                 >
-                  <span className="relative z-10 text-lg md:text-xl text-white/90 font-light">
+                  <span className="relative z-10 text-lg md:text-xl text-white/95 font-light tracking-wide">
                     Turning code into intuitive design
                   </span>
 
@@ -361,11 +417,14 @@ export default function PreLoader({
                       <motion.span
                         animate={
                           glitchActive
-                            ? { x: [-2, 1, 0], opacity: [0.7, 0.35, 0] }
+                            ? {
+                              x: [-5, 2, 0],
+                              opacity: [0.95, 0.45, 0],
+                            }
                             : { opacity: 0 }
                         }
-                        transition={{ duration: 0.14 }}
-                        className="absolute inset-0 text-cyan-300 font-light pointer-events-none"
+                        transition={{ duration: 0.2 }}
+                        className="absolute inset-0 text-cyan-300 pointer-events-none"
                       >
                         Turning code into intuitive design
                       </motion.span>
@@ -373,11 +432,14 @@ export default function PreLoader({
                       <motion.span
                         animate={
                           glitchActive
-                            ? { x: [2, -1, 0], opacity: [0.65, 0.3, 0] }
+                            ? {
+                              x: [5, -2, 0],
+                              opacity: [0.9, 0.4, 0],
+                            }
                             : { opacity: 0 }
                         }
-                        transition={{ duration: 0.14 }}
-                        className="absolute inset-0 text-fuchsia-400 font-light pointer-events-none"
+                        transition={{ duration: 0.2 }}
+                        className="absolute inset-0 text-fuchsia-400 pointer-events-none"
                       >
                         Turning code into intuitive design
                       </motion.span>
