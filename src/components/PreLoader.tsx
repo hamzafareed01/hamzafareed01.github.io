@@ -36,7 +36,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
     if (currentLine < terminalLines.length) {
       const fullText = terminalLines[currentLine].text;
       let charIndex = 0;
-      
+
       const typeNextChar = () => {
         if (charIndex <= fullText.length) {
           setTypedText(fullText.substring(0, charIndex));
@@ -50,7 +50,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
           }, 180); // Reduced pause
         }
       };
-      
+
       typeNextChar();
     }
 
@@ -93,9 +93,9 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
             className="relative w-full max-w-2xl mx-4 p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl shadow-2xl overflow-hidden"
           >
             {/* Neon border effect */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 opacity-75" />
-            <div className="absolute inset-[2px] rounded-2xl bg-black/90" />
-            
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 opacity-60 z-0" />
+            <div className="absolute top-[2px] right-[2px] bottom-[2px] left-[2px] rounded-2xl bg-[#070b14]/95 z-[1]" />
+
             {/* Animated corner accents */}
             <div className="absolute top-0 left-0 w-20 h-20">
               <div className="absolute top-4 left-4 w-12 h-[2px] bg-gradient-to-r from-cyan-400 to-transparent" />
@@ -113,7 +113,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
               <div className="absolute bottom-4 right-4 w-12 h-[2px] bg-gradient-to-l from-cyan-400 to-transparent" />
               <div className="absolute bottom-4 right-4 w-[2px] h-12 bg-gradient-to-t from-cyan-400 to-transparent" />
             </div>
-            
+
             {/* Scanlines effect */}
             {!reduceMotion && (
               <motion.div
@@ -125,9 +125,9 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                 }}
               />
             )}
-            
+
             {/* Grid pattern overlay */}
-            <div 
+            <div
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
                 backgroundImage: `
@@ -137,7 +137,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                 backgroundSize: '20px 20px'
               }}
             />
-            
+
             {/* Glowing particles */}
             {!reduceMotion && [...Array(8)].map((_, i) => (
               <motion.div
@@ -160,7 +160,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                 }}
               />
             ))}
-            
+
             {/* Pulsing glow on edges */}
             {!reduceMotion && (
               <motion.div
@@ -178,7 +178,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                 }}
               />
             )}
-            
+
             {/* Content wrapper with z-index */}
             <div className="relative z-10">
               {/* Tagline above terminal - fades in word by word */}
@@ -189,8 +189,8 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                       key={index}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ 
-                        duration: 0.5, 
+                      transition={{
+                        duration: 0.5,
                         delay: index * 0.2,
                         ease: 'easeOut'
                       }}
@@ -201,7 +201,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                   ))}
                 </div>
               </div>
-              
+
               {/* Terminal header */}
               <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/10">
                 <div className="flex gap-1.5">
@@ -255,7 +255,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                         <span className={typedText.startsWith('>') ? 'text-white font-semibold' : 'text-white/80'}>
                           {typedText.substring(2)}
                         </span>
-                        
+
                         {/* Blinking cursor */}
                         {!reduceMotion && (
                           <motion.span
@@ -277,7 +277,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                   <span>Loading</span>
                   <span>{Math.round(progress)}%</span>
                 </div>
-                
+
                 <div className="relative">
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                     <motion.div
@@ -296,7 +296,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                       )}
                     </motion.div>
                   </div>
-                  
+
                   {/* Rocket animation - Bigger and horizontal */}
                   <motion.div
                     initial={{ left: '0%' }}
@@ -310,7 +310,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                       <div className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none">
                         {/* Main exhaust flame */}
                         <motion.div
-                          animate={{ 
+                          animate={{
                             scale: [1, 1.3, 1],
                             opacity: [0.8, 0.5, 0.8]
                           }}
@@ -319,10 +319,10 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-orange-500/60 via-yellow-400/50 to-transparent rounded-full blur-md" />
                         </motion.div>
-                        
+
                         {/* Secondary flame layer */}
                         <motion.div
-                          animate={{ 
+                          animate={{
                             scale: [1.2, 1, 1.2],
                             opacity: [0.6, 0.8, 0.6]
                           }}
@@ -331,7 +331,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-red-500/50 via-orange-400/40 to-transparent rounded-full blur-sm" />
                         </motion.div>
-                        
+
                         {/* Exhaust particles */}
                         {[...Array(5)].map((_, i) => (
                           <motion.div
@@ -350,13 +350,13 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                             }}
                             className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
                             style={{
-                              background: i % 2 === 0 
+                              background: i % 2 === 0
                                 ? 'radial-gradient(circle, rgba(255, 165, 0, 0.8), transparent)'
                                 : 'radial-gradient(circle, rgba(255, 69, 0, 0.8), transparent)',
                             }}
                           />
                         ))}
-                        
+
                         {/* Smoke trail */}
                         <motion.div
                           animate={{
@@ -373,7 +373,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                         />
                       </div>
                     )}
-                    
+
                     {/* Rocket emoji - bigger and straight */}
                     <motion.div
                       animate={
@@ -388,7 +388,7 @@ export default function PreLoader({ onComplete, reduceMotion }: PreLoaderProps) 
                         🚀
                       </span>
                     </motion.div>
-                    
+
                     {/* Speed lines */}
                     {!reduceMotion && progress > 10 && progress < 100 && (
                       <div className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none">
