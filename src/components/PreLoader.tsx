@@ -7,12 +7,12 @@ interface PreLoaderProps {
 }
 
 const terminalLines = [
-  "$ Initializing deployment pipeline...",
-  "✓ Orchestrating containerized services",
-  "✓ Configuring cloud infrastructure",
-  "✓ Syncing distributed systems",
-  "✓ Optimizing performance metrics",
-  "> Deployment successful!",
+  { text: "$ Initializing deployment pipeline...", delay: 0 },
+  { text: "✓ Orchestrating containerized services", delay: 0.8 },
+  { text: "✓ Configuring cloud infrastructure", delay: 1.6 },
+  { text: "✓ Syncing distributed systems", delay: 2.4 },
+  { text: "✓ Optimizing performance metrics", delay: 3.2 },
+  { text: "> Deployment successful!", delay: 4.0 },
 ];
 
 export default function PreLoader({
@@ -29,26 +29,25 @@ export default function PreLoader({
     if (reduceMotion) {
       const skipTimer = setTimeout(() => {
         setIsComplete(true);
-        setTimeout(onComplete, 250);
+        setTimeout(onComplete, 300);
       }, 800);
-
       return () => clearTimeout(skipTimer);
     }
 
     let typingTimer: ReturnType<typeof setTimeout>;
 
     if (currentLine < terminalLines.length) {
-      const fullText = terminalLines[currentLine];
+      const fullText = terminalLines[currentLine].text;
       let charIndex = 0;
 
       const typeNextChar = () => {
         if (charIndex <= fullText.length) {
           setTypedText(fullText.substring(0, charIndex));
           charIndex++;
-          typingTimer = setTimeout(typeNextChar, 16);
+          typingTimer = setTimeout(typeNextChar, 15);
         } else {
           typingTimer = setTimeout(() => {
-            setCurrentLine((prev: number) => prev + 1);
+            setCurrentLine((prev) => prev + 1);
             setTypedText("");
           }, 180);
         }
@@ -58,15 +57,17 @@ export default function PreLoader({
     }
 
     return () => clearTimeout(typingTimer);
-  }, [currentLine, reduceMotion, onComplete]);
+  }, [currentLine, reduceMotion]);
 
   useEffect(() => {
     if (reduceMotion) return;
 
     const progressInterval = setInterval(() => {
-      setProgress((prev: number) => {
+      setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
+          setIsComplete(true);
+          setTimeout(onComplete, 300);
           return 100;
         }
         return prev + 1;
@@ -74,88 +75,18 @@ export default function PreLoader({
     }, 47);
 
     return () => clearInterval(progressInterval);
-  }, [reduceMotion]);
-
-  useEffect(() => {
-    if (progress >= 100) {
-      setIsComplete(true);
-      const completeTimer = setTimeout(() => {
-        onComplete();
-      }, 300);
-
-      return () => clearTimeout(completeTimer);
-    }
-  }, [progress, onComplete]);
+  }, [reduceMotion, onComplete]);
 
   useEffect(() => {
     if (reduceMotion) return;
 
     const glitchInterval = setInterval(() => {
       setGlitchActive(true);
-      setTimeout(() => setGlitchActive(false), 220);
+      setTimeout(() => setGlitchActive(false), 180);
     }, 1700);
 
     return () => clearInterval(glitchInterval);
   }, [reduceMotion]);
-
-  const renderCompletedLine = (line: string, index: number) => (
-    <div
-      key={index}
-      className="font-mono text-sm md:text-base flex items-center gap-2"
-    >
-      {line.startsWith("$") && (
-        <span className="text-[#00bfff] font-bold">{line.charAt(0)}</span>
-      )}
-      {line.startsWith("✓") && (
-        <span className="text-emerald-400">{line.charAt(0)}</span>
-      )}
-      {line.startsWith(">") && (
-        <span className="text-[#00bfff] font-bold">{line.charAt(0)}</span>
-      )}
-
-      <span
-        className={
-          line.startsWith(">")
-            ? "text-white font-semibold"
-            : "text-white/80"
-        }
-      >
-        {line.substring(2)}
-      </span>
-    </div>
-  );
-
-  const renderTypingLine = (line: string) => (
-    <div className="font-mono text-sm md:text-base flex items-center gap-2">
-      {line.startsWith("$") && (
-        <span className="text-[#00bfff] font-bold">{line.charAt(0)}</span>
-      )}
-      {line.startsWith("✓") && (
-        <span className="text-emerald-400">{line.charAt(0)}</span>
-      )}
-      {line.startsWith(">") && (
-        <span className="text-[#00bfff] font-bold">{line.charAt(0)}</span>
-      )}
-
-      <span
-        className={
-          line.startsWith(">")
-            ? "text-white font-semibold"
-            : "text-white/80"
-        }
-      >
-        {line.substring(2)}
-      </span>
-
-      {!reduceMotion && (
-        <motion.span
-          animate={{ opacity: [1, 0, 1] }}
-          transition={{ duration: 0.8, repeat: Infinity }}
-          className="inline-block w-2 h-4 bg-[#00bfff] ml-1"
-        />
-      )}
-    </div>
-  );
 
   return (
     <AnimatePresence>
@@ -167,153 +98,130 @@ export default function PreLoader({
           transition={{ duration: 0.3 }}
           className="fixed inset-0 z-50 flex items-center justify-center"
         >
+          {/* Cyberpunk terminal card */}
           <motion.div
-            initial={{ scale: 0.94, opacity: 0 }}
-            animate={
-              !reduceMotion && glitchActive
-                ? {
-                    scale: [1, 1.006, 0.996, 1],
-                    x: [0, -2, 2, -1, 0],
-                    y: [0, 1, -1, 0],
-                  }
-                : { scale: 1, opacity: 1, x: 0, y: 0 }
-            }
-            exit={{ scale: 1.03, opacity: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="relative w-full max-w-2xl mx-4 p-8 md:p-12 rounded-2xl overflow-hidden shadow-2xl"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 1.1, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="relative w-full max-w-2xl mx-4 p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl shadow-2xl overflow-hidden"
           >
-            {/* Strong visible outer frame */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 opacity-95 z-0" />
+            {/* Neon border effect - KEEP ORIGINAL */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 opacity-75 z-0" />
+            <div className="absolute inset-[2px] rounded-2xl bg-black/90 z-[1]" />
 
-            {/* Thick dark terminal body */}
-            <div className="absolute inset-[3px] rounded-[18px] bg-[#050914] z-[1]" />
-
-            {/* Inner tinted wash */}
-            <div className="absolute inset-[3px] rounded-[18px] z-[1] bg-[radial-gradient(circle_at_15%_25%,rgba(0,191,255,0.14),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(255,0,153,0.10),transparent_24%),radial-gradient(circle_at_50%_100%,rgba(131,56,236,0.10),transparent_30%)]" />
-
-            {/* Strong visible panel darkener */}
-            <div className="absolute inset-[3px] rounded-[18px] bg-black/45 z-[1]" />
-
-            {/* Frame glow */}
-            <div
-              className="absolute inset-0 rounded-2xl pointer-events-none z-[1]"
-              style={{
-                boxShadow:
-                  "0 0 28px rgba(0,191,255,0.30), 0 0 55px rgba(255,0,153,0.16)",
-              }}
-            />
-
-            {/* Corner accents */}
-            <div className="absolute top-0 left-0 w-24 h-24 z-[2]">
-              <div className="absolute top-5 left-5 w-14 h-[2px] bg-gradient-to-r from-cyan-400 to-transparent" />
-              <div className="absolute top-5 left-5 w-[2px] h-14 bg-gradient-to-b from-cyan-400 to-transparent" />
-            </div>
-            <div className="absolute top-0 right-0 w-24 h-24 z-[2]">
-              <div className="absolute top-5 right-5 w-14 h-[2px] bg-gradient-to-l from-fuchsia-400 to-transparent" />
-              <div className="absolute top-5 right-5 w-[2px] h-14 bg-gradient-to-b from-fuchsia-400 to-transparent" />
-            </div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 z-[2]">
-              <div className="absolute bottom-5 left-5 w-14 h-[2px] bg-gradient-to-r from-violet-400 to-transparent" />
-              <div className="absolute bottom-5 left-5 w-[2px] h-14 bg-gradient-to-t from-violet-400 to-transparent" />
-            </div>
-            <div className="absolute bottom-0 right-0 w-24 h-24 z-[2]">
-              <div className="absolute bottom-5 right-5 w-14 h-[2px] bg-gradient-to-l from-cyan-400 to-transparent" />
-              <div className="absolute bottom-5 right-5 w-[2px] h-14 bg-gradient-to-t from-cyan-400 to-transparent" />
-            </div>
-
-            {/* Grid */}
-            <div
-              className="absolute inset-[3px] rounded-[18px] pointer-events-none z-[2]"
-              style={{
-                backgroundImage: `
-                  linear-gradient(rgba(0,255,255,0.08) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(0,255,255,0.08) 1px, transparent 1px)
-                `,
-                backgroundSize: "24px 24px",
-                opacity: 0.24,
-              }}
-            />
-
-            {/* Scanlines */}
+            {/* Shell-only glitch overlays */}
             {!reduceMotion && (
-              <motion.div
-                animate={{ y: ["0%", "100%"] }}
-                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-[3px] rounded-[18px] pointer-events-none z-[2]"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,255,0.02) 3px, rgba(0,255,255,0.02) 4px)",
-                }}
-              />
-            )}
-
-            {/* Cyberpunk shell glitch only */}
-            {!reduceMotion && (
-              <div className="absolute inset-[3px] rounded-[18px] overflow-hidden pointer-events-none z-[4]">
-                {[14, 28, 42, 57, 73].map((top, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute left-0 right-0"
-                    style={{
-                      top: `${top}%`,
-                      height: i % 2 === 0 ? "12px" : "18px",
-                      background:
-                        "linear-gradient(90deg, transparent 0%, rgba(0,255,255,0.22) 20%, rgba(255,0,153,0.16) 52%, transparent 100%)",
-                      mixBlendMode: "screen",
-                    }}
-                    animate={
-                      glitchActive
-                        ? {
-                            x: [0, i % 2 === 0 ? -34 : 28, 14, 0],
-                            opacity: [0, 1, 0.55, 0],
-                            skewX: [0, -12, 6, 0],
-                          }
-                        : { opacity: 0 }
-                    }
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                  />
-                ))}
-
-                {/* quick shell flash */}
+              <>
+                {/* frame split */}
                 <motion.div
-                  className="absolute inset-0"
                   animate={
                     glitchActive
-                      ? {
-                          opacity: [0, 0.12, 0],
-                          backgroundPositionX: ["0%", "100%", "0%"],
-                        }
-                      : { opacity: 0 }
+                      ? { opacity: [0, 0.5, 0], x: [-2, 2, 0] }
+                      : { opacity: 0, x: 0 }
                   }
                   transition={{ duration: 0.16 }}
+                  className="absolute inset-0 rounded-2xl border border-cyan-300/50 pointer-events-none z-[4]"
+                />
+                <motion.div
+                  animate={
+                    glitchActive
+                      ? { opacity: [0, 0.35, 0], x: [2, -2, 0] }
+                      : { opacity: 0, x: 0 }
+                  }
+                  transition={{ duration: 0.16 }}
+                  className="absolute inset-0 rounded-2xl border border-fuchsia-400/40 pointer-events-none z-[4]"
+                />
+
+                {/* frame flash */}
+                <motion.div
+                  animate={
+                    glitchActive
+                      ? { opacity: [0, 0.12, 0] }
+                      : { opacity: 0 }
+                  }
+                  transition={{ duration: 0.14 }}
+                  className="absolute inset-[2px] rounded-2xl pointer-events-none z-[4]"
                   style={{
-                    backgroundImage:
-                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.07) 48%, transparent 52%)",
+                    background:
+                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 48%, transparent 52%)",
                     backgroundSize: "220px 100%",
                   }}
                 />
 
-                {/* frame chromatic split */}
-                <motion.div
-                  animate={
-                    glitchActive ? { opacity: [0, 0.35, 0] } : { opacity: 0 }
-                  }
-                  transition={{ duration: 0.16 }}
-                  className="absolute inset-0 rounded-[18px] border border-cyan-300/50"
-                  style={{ transform: "translateX(-2px)" }}
-                />
-                <motion.div
-                  animate={
-                    glitchActive ? { opacity: [0, 0.28, 0] } : { opacity: 0 }
-                  }
-                  transition={{ duration: 0.16 }}
-                  className="absolute inset-0 rounded-[18px] border border-fuchsia-400/40"
-                  style={{ transform: "translateX(2px)" }}
-                />
-              </div>
+                {/* shell glitch bars */}
+                <div className="absolute inset-[2px] rounded-2xl overflow-hidden pointer-events-none z-[4]">
+                  {[16, 30, 68, 82].map((top, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute left-0 right-0"
+                      style={{
+                        top: `${top}%`,
+                        height: i % 2 === 0 ? "10px" : "14px",
+                        background:
+                          "linear-gradient(90deg, transparent 0%, rgba(0,255,255,0.18) 20%, rgba(255,0,153,0.14) 52%, transparent 100%)",
+                        mixBlendMode: "screen",
+                      }}
+                      animate={
+                        glitchActive
+                          ? {
+                              x: [0, i % 2 === 0 ? -26 : 24, 8, 0],
+                              opacity: [0, 1, 0.45, 0],
+                              skewX: [0, -10, 4, 0],
+                            }
+                          : { opacity: 0 }
+                      }
+                      transition={{ duration: 0.16, ease: "easeOut" }}
+                    />
+                  ))}
+                </div>
+              </>
             )}
 
-            {/* Particles */}
+            {/* Animated corner accents - KEEP ORIGINAL */}
+            <div className="absolute top-0 left-0 w-20 h-20 z-[3]">
+              <div className="absolute top-4 left-4 w-12 h-[2px] bg-gradient-to-r from-cyan-400 to-transparent" />
+              <div className="absolute top-4 left-4 w-[2px] h-12 bg-gradient-to-b from-cyan-400 to-transparent" />
+            </div>
+            <div className="absolute top-0 right-0 w-20 h-20 z-[3]">
+              <div className="absolute top-4 right-4 w-12 h-[2px] bg-gradient-to-l from-pink-400 to-transparent" />
+              <div className="absolute top-4 right-4 w-[2px] h-12 bg-gradient-to-b from-pink-400 to-transparent" />
+            </div>
+            <div className="absolute bottom-0 left-0 w-20 h-20 z-[3]">
+              <div className="absolute bottom-4 left-4 w-12 h-[2px] bg-gradient-to-r from-purple-400 to-transparent" />
+              <div className="absolute bottom-4 left-4 w-[2px] h-12 bg-gradient-to-t from-purple-400 to-transparent" />
+            </div>
+            <div className="absolute bottom-0 right-0 w-20 h-20 z-[3]">
+              <div className="absolute bottom-4 right-4 w-12 h-[2px] bg-gradient-to-l from-cyan-400 to-transparent" />
+              <div className="absolute bottom-4 right-4 w-[2px] h-12 bg-gradient-to-t from-cyan-400 to-transparent" />
+            </div>
+
+            {/* Scanlines effect - KEEP ORIGINAL */}
+            {!reduceMotion && (
+              <motion.div
+                animate={{ y: ["0%", "100%"] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 pointer-events-none z-[2]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 255, 0.03) 2px, rgba(0, 255, 255, 0.03) 4px)",
+                }}
+              />
+            )}
+
+            {/* Grid pattern overlay - KEEP ORIGINAL */}
+            <div
+              className="absolute inset-0 opacity-5 pointer-events-none z-[2]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(0, 255, 255, 0.5) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0, 255, 255, 0.5) 1px, transparent 1px)
+                `,
+                backgroundSize: "20px 20px",
+              }}
+            />
+
+            {/* Glowing particles - KEEP ORIGINAL */}
             {!reduceMotion &&
               [...Array(8)].map((_, i) => (
                 <motion.div
@@ -322,59 +230,165 @@ export default function PreLoader({
                   style={{
                     background:
                       i % 3 === 0
-                        ? "#00d9ff"
+                        ? "#00ffff"
                         : i % 3 === 1
-                          ? "#b100ff"
-                          : "#ff2da1",
-                    left: `${12 + i * 10}%`,
-                    top: `${18 + (i % 3) * 18}%`,
+                          ? "#ff00ff"
+                          : "#ff0080",
+                    left: `${10 + i * 12}%`,
+                    top: `${20 + (i % 3) * 20}%`,
                   }}
                   animate={{
-                    opacity: [0.16, 0.5, 0.16],
-                    scale: [1, 1.35, 1],
-                    y: [0, -8, 0],
+                    opacity: [0.2, 0.8, 0.2],
+                    scale: [1, 1.5, 1],
+                    y: [0, -10, 0],
                   }}
                   transition={{
-                    duration: 2 + i * 0.25,
+                    duration: 2 + i * 0.3,
                     repeat: Infinity,
                     delay: i * 0.2,
                   }}
                 />
               ))}
 
-            {/* Content stays normal */}
-            <div className="relative z-[5]">
+            {/* Pulsing glow on edges - KEEP ORIGINAL */}
+            {!reduceMotion && (
+              <motion.div
+                animate={{
+                  opacity: [0.3, 0.6, 0.3],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute inset-0 rounded-2xl z-[1]"
+                style={{
+                  boxShadow:
+                    "0 0 30px rgba(0, 255, 255, 0.5), inset 0 0 30px rgba(255, 0, 255, 0.3)",
+                }}
+              />
+            )}
+
+            {/* Content wrapper with z-index */}
+            <div className="relative z-10">
+              {/* Tagline above terminal */}
               <div className="mb-6 text-center">
-                <span className="text-lg md:text-xl text-white/90 font-light tracking-wide">
-                  Turning code into intuitive design
-                </span>
+                <div className="flex items-center justify-center gap-2 flex-wrap">
+                  {["Turning", "code", "into", "intuitive", "design"].map(
+                    (word, index) => (
+                      <motion.span
+                        key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.2,
+                          ease: "easeOut",
+                        }}
+                        className="text-lg md:text-xl text-white/90 font-light"
+                      >
+                        {word}
+                      </motion.span>
+                    ),
+                  )}
+                </div>
               </div>
 
+              {/* Terminal header */}
               <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/10">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/80" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                   <div className="w-3 h-3 rounded-full bg-green-500/80" />
                 </div>
-                <span className="ml-3 text-sm text-white/55 font-mono">
+                <span className="ml-3 text-sm text-white/50 font-mono">
                   hamza-syed@portfolio
                 </span>
               </div>
 
+              {/* Terminal content */}
               <div className="space-y-3 min-h-[200px] mb-8">
                 {terminalLines.map((line, index) => {
                   if (index < currentLine) {
-                    return renderCompletedLine(line, index);
-                  }
-                  if (index === currentLine) {
-                    return <div key={index}>{renderTypingLine(typedText)}</div>;
+                    return (
+                      <div
+                        key={index}
+                        className="font-mono text-sm md:text-base flex items-center gap-2"
+                      >
+                        {line.text.startsWith("$") && (
+                          <span className="text-[#0078d4] font-bold">
+                            {line.text.charAt(0)}
+                          </span>
+                        )}
+                        {line.text.startsWith("✓") && (
+                          <span className="text-emerald-400">
+                            {line.text.charAt(0)}
+                          </span>
+                        )}
+                        {line.text.startsWith(">") && (
+                          <span className="text-[#0078d4] font-bold">
+                            {line.text.charAt(0)}
+                          </span>
+                        )}
+                        <span
+                          className={
+                            line.text.startsWith(">")
+                              ? "text-white font-semibold"
+                              : "text-white/80"
+                          }
+                        >
+                          {line.text.substring(2)}
+                        </span>
+                      </div>
+                    );
+                  } else if (index === currentLine) {
+                    return (
+                      <div
+                        key={index}
+                        className="font-mono text-sm md:text-base flex items-center gap-2"
+                      >
+                        {typedText.startsWith("$") && (
+                          <span className="text-[#0078d4] font-bold">
+                            {typedText.charAt(0)}
+                          </span>
+                        )}
+                        {typedText.startsWith("✓") && (
+                          <span className="text-emerald-400">
+                            {typedText.charAt(0)}
+                          </span>
+                        )}
+                        {typedText.startsWith(">") && (
+                          <span className="text-[#0078d4] font-bold">
+                            {typedText.charAt(0)}
+                          </span>
+                        )}
+                        <span
+                          className={
+                            typedText.startsWith(">")
+                              ? "text-white font-semibold"
+                              : "text-white/80"
+                          }
+                        >
+                          {typedText.substring(2)}
+                        </span>
+
+                        {!reduceMotion && (
+                          <motion.span
+                            animate={{ opacity: [1, 0, 1] }}
+                            transition={{ duration: 0.8, repeat: Infinity }}
+                            className="inline-block w-2 h-4 bg-[#0078d4] ml-1"
+                          />
+                        )}
+                      </div>
+                    );
                   }
                   return null;
                 })}
               </div>
 
+              {/* Progress bar */}
               <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs font-mono text-white/55">
+                <div className="flex justify-between items-center text-xs font-mono text-white/50">
                   <span>Loading</span>
                   <span>{Math.round(progress)}%</span>
                 </div>
@@ -384,8 +398,8 @@ export default function PreLoader({
                     <motion.div
                       initial={{ width: "0%" }}
                       animate={{ width: `${progress}%` }}
-                      transition={{ duration: 0.25, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-[#0078d4] to-[#00c8ff] rounded-full relative"
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="h-full bg-gradient-to-r from-[#0078d4] to-[#00a8e8] rounded-full relative"
                     >
                       {!reduceMotion && progress < 100 && (
                         <motion.div
@@ -404,16 +418,16 @@ export default function PreLoader({
                   <motion.div
                     initial={{ left: "0%" }}
                     animate={{ left: `${progress}%` }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="absolute -top-12 -translate-x-1/2"
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="absolute -top-12 transform -translate-x-1/2"
                     style={{ left: `${progress}%` }}
                   >
                     {!reduceMotion && progress > 2 && progress < 100 && (
                       <div className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none">
                         <motion.div
                           animate={{
-                            scale: [1, 1.25, 1],
-                            opacity: [0.8, 0.45, 0.8],
+                            scale: [1, 1.3, 1],
+                            opacity: [0.8, 0.5, 0.8],
                           }}
                           transition={{ duration: 0.3, repeat: Infinity }}
                           className="absolute -left-8 top-1/2 -translate-y-1/2 w-16 h-8"
@@ -423,7 +437,7 @@ export default function PreLoader({
 
                         <motion.div
                           animate={{
-                            scale: [1.15, 1, 1.15],
+                            scale: [1.2, 1, 1.2],
                             opacity: [0.6, 0.8, 0.6],
                           }}
                           transition={{ duration: 0.25, repeat: Infinity }}
@@ -436,7 +450,9 @@ export default function PreLoader({
 
                     <motion.div
                       animate={
-                        !reduceMotion && progress < 100 ? { y: [0, -2, 0] } : {}
+                        !reduceMotion && progress < 100
+                          ? { y: [0, -2, 0] }
+                          : {}
                       }
                       transition={{
                         duration: 0.4,
@@ -445,7 +461,11 @@ export default function PreLoader({
                       }}
                       className="relative z-10"
                     >
-                      <span className="text-4xl block" role="img" aria-label="rocket">
+                      <span
+                        className="text-4xl block transform rotate-0"
+                        role="img"
+                        aria-label="rocket"
+                      >
                         🚀
                       </span>
                     </motion.div>
@@ -453,16 +473,17 @@ export default function PreLoader({
                 </div>
               </div>
 
+              {/* Skip button */}
               <motion.button
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 0.55 }}
+                animate={{ opacity: 0.5 }}
                 whileHover={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.5 }}
                 onClick={() => {
                   setIsComplete(true);
                   onComplete();
                 }}
-                className="absolute top-4 right-4 text-xs text-white/55 hover:text-white/85 transition-colors font-mono z-20"
+                className="absolute top-4 right-4 text-xs text-white/50 hover:text-white/80 transition-colors font-mono z-20"
               >
                 Skip →
               </motion.button>
